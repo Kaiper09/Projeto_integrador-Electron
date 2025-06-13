@@ -7,8 +7,8 @@ const { console } = require('inspector');
 
 function criarJanelaModal(telaPai, arquivoHtml) {
     const janela = new BrowserWindow({
-        width: 1000,
-        height: 800,
+        width: 800,
+        height: 600,
 
         modal: true,
         parent: telaPai,

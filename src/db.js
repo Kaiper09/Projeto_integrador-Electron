@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const pool = new Pool({
   user: 'postgres',         // <- substitua pelo seu usuário do PostgreSQL
   host: 'localhost',
-  database: 'projeto_integrador',       // <- substitua pelo nome do seu banco de dados
+  database: 'projeto-integrador',       // <- substitua pelo nome do seu banco de dados
   password: '123456',       // <- substitua pela senha correta
   port: 5432,                  // porta padrão do PostgreSQL
 });

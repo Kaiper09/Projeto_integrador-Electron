@@ -1,28 +1,31 @@
+const tabelaCliente = document.getElementById('clientesTableDados');
+
+const modalCpfCliente = document.getElementById('cliente-cpf');
+const modalNomeCliente = document.getElementById('cliente-nome');
+const modalNascimentoCliente = document.getElementById('cliente-nascimento');
+const modalNumeroCliente= document.getElementById('cliente-numero')
+const modalCidadeCliente= document.getElementById('cliente-cidade')
 
 
-const tabelaCliente = document.getElementBycpf('ClientesTableDados');
-
-const modalCpfCliente = document.getElementBycpf('Cliente-cpf');
-const modalNomeCliente = document.getElementById('Cliente-nome');
-const modalNascimentoCliente = document.getElementByID('Cliente-Nascimento');
-
-
-
-const botaoLimpar=document.getElementById('btn-limpar');
+const botaoLimpar = document.getElementById('btn-limpar');
 const botaoExcluir = document.getElementById('btn-excluir');
-const botaoSalvar = document.getElementBycpf('btn-salvar');
+const botaoSalvar = document.getElementById('btn-salvar');
 
 botaoSalvar.addEventListener('click', salvarCliente)
-botaoExcluir.addEventListener('click', excluirCliente)
+botaoExcluir.addEventListener('click', deleterCliente)
 botaoLimpar.addEventListener('click', limpardados )
 
 
 
 
-function mostrarDetalhes(nome, nascimento, cpf) {
+function mostrarDetalhes(cpf, nome, nascimento, numero, cidade) {
+    console.log(nascimento)
     modalCpfCliente.value = cpf;
-    modalNascimentoCliente.value = nascimento;
     modalNomeCliente.value = nome;
+    modalNascimentoCliente.value = nascimento.toISOString().slice(0, 10);
+    modalNumeroCliente.value= numero;
+    modalCidadeCliente.value= cidade;
+    
 }
 
 async function limpardados(){
@@ -51,15 +54,15 @@ async function salvarCliente() {
 }
 
 
-async function excluirCliente() {
-    const pcpf = modalCpfCliente.value;
-    console.log("vou deletar o cpf ", pcpf);
+async function deleterCliente() {
+    const cpf = modalCpfCliente.value;
+    console.log("vou deletar o cpf ", cpf);
 
-    const retorno = await window.senacAPI.excluirClientes(pcpf);
+    const retorno = await window.bancoDeDadosAPI.deleterCliente(cpf);
 
     //após deleção atualiza a lista de Clientes
     carregarClientes();
-    mostrarDetalhes("", "", "");
+    mostrarDetalhes("", "", "", "", "");
 }
 
 async function atualizarCliente() {
@@ -67,24 +70,24 @@ async function atualizarCliente() {
     const novoNome = modalNomeCliente.value;
     const novaNascimento = modalNascimentoCliente.value;
     console.log("atualização teste")
-    const retorno = await window.senacAPI.atualizarCliente(novoNome, novaNascimento, pcpf)
+    const retorno = await window.bancoDeDadosAPI.atualizarCliente(novoNome, novaNascimento, pcpf)
     carregarClientes()
 }
 
 
 async function carregarClientes() {
-    const listaClientes = await window.senacAPI.buscarClientes();
+    const listaClientes = await window.bancoDeDadosAPI.buscarCliente();
     tabelaCliente.innerHTML = "";
 
     console.log(listaClientes)
     listaClientes.forEach(criarLinhaCliente)
 
-    if (!listaClientes.lengtd > 0) {
+    if (!listaClientes.length > 0) {
 
         tabelaCliente.textContent = "sem dados"
     }
 
-    luccpfe.createIcons(); // renderiza os ícones do Luccpfe
+    lucide.createIcons(); // renderiza os ícones do Luccpfe
 }
 
 function criarLinhaCliente(clientes) {
@@ -104,11 +107,11 @@ function criarLinhaCliente(clientes) {
 
     //Nascimento
     const celulaNascimento = document.createElement("td");
-    celulaNascimento.textContent = clientes.Nascimento;
+    celulaNascimento.textContent = clientes.nascimento.toLocaleDateString()
     linha.appendChild(celulaNascimento);
 
     const celulaNumero=  document.createElement("td");
-    celulaNumero.textContent= clientes.celulaNumero;
+    celulaNumero.textContent= clientes.numero;
     linha.appendChild(celulaNumero);
 
     const celulaCidade= document.createElement("td");
@@ -119,7 +122,7 @@ function criarLinhaCliente(clientes) {
     const celulaBotao = document.createElement("td");
     const botao = document.createElement("button");
     botao.addEventListener("click",
-        function () { mostrarDetalhes(Cliente.nome, Cliente.Nascimento, Cliente.cpf) }
+        function () { mostrarDetalhes(clientes.cpf, clientes.nome, clientes.nascimento, clientes.numero, clientes.cidade) }
     );
     botao.textContent = '';
 
@@ -130,17 +133,17 @@ function criarLinhaCliente(clientes) {
 
 
     const icone = document.createElement("i")
-    icone.setAttribute("data-luccpfe","edit");
+    icone.setAttribute("data-lucide","edit");
     botao.appendChild(icone);
 
-    const iconeLimpar = document.getElementBycpf('ilimpar')
-    iconeLimpar.setAttribute('data-luccpfe','circle-plus')
+    const iconeLimpar = document.getElementById('ilimpar')
+    iconeLimpar.setAttribute('data-lucide','circle-plus')
 
-    const iconeSalvar = document.getElementBycpf('isalvar')
-    iconeSalvar.setAttribute('data-luccpfe','save')
+    const iconeSalvar = document.getElementById('isalvar')
+    iconeSalvar.setAttribute('data-lucide','save')
 
-    const iconelixo = document.getElementBycpf('ilixo')
-    iconelixo.setAttribute('data-luccpfe', 'trash-2')
+    const iconelixo = document.getElementById('ilixo')
+    iconelixo.setAttribute('data-lucide', 'trash-2')
 
 
 

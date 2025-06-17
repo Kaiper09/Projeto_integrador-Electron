@@ -14,7 +14,7 @@ const { modalAbrirCliente } = require('./janelaModal')
 function registrarClienteHandler(){
     ipcMain.handle('buscar-cliente',buscarCliente)
     ipcMain.handle('inserir-cliente',inserirCliente)
-    ipcMain.handle('aualizar-cliente',atualizarCliente)
+    ipcMain.handle('atualizar-cliente',atualizarCliente)
     ipcMain.handle('deletar-cliente',deleterCliente)
 }
 

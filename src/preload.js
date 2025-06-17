@@ -1,4 +1,4 @@
-console.log("teste preload")
+
 
 const { contextBridge, ipcRenderer } = require('electron')
 
@@ -7,12 +7,13 @@ function buscarCliente() {
     return ipcRenderer.invoke('buscar-cliente')
 }
 
-function atualizarCliente(nome, nascimento, numero, cidade, cpf) {
-    return ipcRenderer.invoke('atualizar-cliente', nome, nascimento, numero, cidade, cpf)
+function atualizarCliente(nome, nascimento, numero, cidade, situacao , cpf) {
+    return ipcRenderer.invoke('atualizar-cliente', nome, nascimento, numero, cidade, situacao,cpf)
+    //                                          (newNome, newNascimento, newCidade, newNumero
 }
 
 function inserirCliente(cpf, nome, nascimento, numero, cidade) {
-    return ipcRenderer.invoke('inserir-cliente', cpf, nome, nascimento, numero, cidade)
+    return ipcRenderer.invoke('inserir-cliente', cpf, nome, nascimento, numero, cidade,situacao )
 }
 
 function deleterCliente(cpf) {

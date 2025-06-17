@@ -11,9 +11,7 @@
 </head>
 
 <body>
-    <button id="btn-limpar">
-        <icon id="ilimpar"></icon>
-    </button>
+    <button id="btn-limpar"><icon id="ilimpar"></icon></button>
     <table id="clientesTable">
         <thead>
             <tr >
@@ -22,6 +20,7 @@
                 <th>Nascimento</th>
                 <th>Numero</th>
                 <th>Cidade</th>
+                <th>Situação</th>
             </tr>
         </thead>
         <tbody id="clientesTableDados">
@@ -31,13 +30,13 @@
 
     <!--modal-->
     <div id="modal">
-        <label>CPF: <input type="text" id="cliente-cpf" readonly />
+        <label>CPF: <input type="text" id="cliente-cpf"/>
         </label>
         <br>
         <label>Nome: <input type="text" id="cliente-nome">
         </label>
         <br>
-        <label>Nascimento: <input type="date" id="cliente-nascimento">
+        <label>Nascimento: <input type="date"  id="cliente-nascimento"  max="2007-06-17">
         </label>
         <br>
         <label>Numero: <input type="text" id="cliente-numero">
@@ -45,11 +44,15 @@
         <br>
         <label>Cidade: <input type="text" id="cliente-cidade"></label>
         <br>
-        <label>Situação: <input type="text" id="cliente-situacao"></label>
-
+        <label for="situacao">Situação:</label>
+        <select id="situacao" name="situacao">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+        </select>
+        <br>
+           
             <button id="btn-salvar"><icon id="isalvar"></icon></button>
             <button id="btn-excluir"><icon id="ilixo"></icon></button>
-            
     </div>
 
 

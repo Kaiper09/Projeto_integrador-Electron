@@ -1,4 +1,5 @@
 const {ipcMain}=require('electron')
+const {createMainWindow} = require('./janelaPrincipal');
 
 const {
     buscarCliente,
@@ -6,9 +7,12 @@ const {
     inserirCliente,
     deleterCliente,
 }=require('./cliente/clienteDB')
+
 const { modalAbrirCliente } = require('./janelaModal')
 
 //-----------------------------------
+
+const {validarLogin}= require('./login/loginDB')
 
 //----------------------------------
 function registrarClienteHandler(){
@@ -19,15 +23,22 @@ function registrarClienteHandler(){
 }
 
 //-----------------------------------
+    function registrarLoginHandler(){
+        ipcMain.handle('validar-login', validarLogin)
+    }
+//-----------------------------------
+
 
 function registrarJanela(){
     ipcMain.on('abrir-cliente',modalAbrirCliente)
+    ipcMain.on('abrir-menu',createMainWindow)
 }
 
 //--------------------------------
 
 function registrarListeners(){
     registrarClienteHandler();
+    registrarLoginHandler();
     registrarJanela();
 }
 

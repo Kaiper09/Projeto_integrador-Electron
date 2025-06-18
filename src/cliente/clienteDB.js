@@ -14,8 +14,6 @@ async function inserirCliente(event,cpf, nome, nascimento, numero, cidade, situa
 
 async function atualizarCliente(event, nome, nascimento, numero, cidade, situacao, cpf ) {
     //console.log(event)
-    console.log(cpf)
-    console.log("Vou atualizar o cliente")
     const resultado = await db.query ('UPDATE servicos.clientes SET nome=$1, nascimento=$2, numero=$3, cidade=$4, situacao=$5 WHERE cpf=$6',[nome,nascimento,numero,cidade, situacao,cpf])
     return resultado.rows
 }

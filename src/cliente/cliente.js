@@ -6,7 +6,7 @@ const modalNomeCliente = document.getElementById('cliente-nome');
 const modalNascimentoCliente = document.getElementById('cliente-nascimento');
 const modalNumeroCliente= document.getElementById('cliente-numero');
 const modalCidadeCliente= document.getElementById('cliente-cidade');
-const modalSituacaoCliente= document.getElementById('cliente-situacao');
+
 
 const dropDownSituacao= document.getElementById('situacao');
 
@@ -49,6 +49,7 @@ async function salvarCliente() {
     const newNascimento= modalNascimentoCliente.value;
     const newNumero= modalNumeroCliente.value;
     const newCidade= modalCidadeCliente.value;
+    const newSitucao= dropDownSituacao.value
    
 
     if(modalCpfCliente==''){
@@ -57,7 +58,7 @@ async function salvarCliente() {
         }console.log("testano insireiriraitgia");
         await window.bancoDeDadosAPI.inserirCliente(newNome, newNascimento, newCidade, newNumero);
         carregarClientes();
-        console.log("fudeo muito testando");
+        console.log("Testando");
         mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
         return;
     }else{
@@ -85,12 +86,12 @@ async function atualizarCliente() {
     const newNascimento= modalNascimentoCliente.value;
     const newNumero= modalNumeroCliente.value;
     const newCidade= modalCidadeCliente.value;
-    const newSitucao= modalSituacaoCliente.value
+    const newSitucao= dropDownSituacao.value
     const newCpf= modalCpfCliente.value;
 
     console.log("atualização teste");
-                                                    nome, nascimento, numero, cidade, situacao, cpf
-    const retorno = await window.bancoDeDadosAPI.atualizarCliente(newNome, newNascimento, newNumero, newCidade, newCpf);
+                                                    //nome, nascimento, numero, cidade, situacao, cpf
+    const retorno = await window.bancoDeDadosAPI.atualizarCliente(newNome, newNascimento, newNumero, newCidade, newSitucao,newCpf);
     carregarClientes();
 
 }
@@ -168,8 +169,8 @@ function criarLinhaCliente(clientes) {
     const iconeSalvar = document.getElementById('isalvar');
     iconeSalvar.setAttribute('data-lucide','save');
 
-    const iconelixo = document.getElementById('ilixo');
-    iconelixo.setAttribute('data-lucide', 'trash-2');
+    /*const iconelixo = document.getElementById('ilixo');
+    iconelixo.setAttribute('data-lucide', 'trash-2');*/
 
 
 

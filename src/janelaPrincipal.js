@@ -2,6 +2,7 @@ const { BrowserWindow } = require("electron");
 const path = require("path");
 
 let janelaPrincipal;
+let janelaUser;
 let janelaLogin;
 
 function createMainWindow() {
@@ -19,17 +20,37 @@ function createMainWindow() {
     janelaPrincipal = null; //limpa a referencia quando a jenela é fechada
   });
 
+janelaLogin.close()
+
   return janelaPrincipal;
 }
 
-function getJanelaPrincipal() {
-  return janelaPrincipal;
+
+function createUserWindow() {
+  janelaUser = new BrowserWindow({
+    width: 1200,
+    height: 1000,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+
+   janelaUser.loadFile("./src/user/user.html");
+
+   janelaUser.on("closed", () => {
+     janelaUser = null; //limpa a referencia quando a jenela é fechada
+  });
+
+ janelaLogin.close()
+
+  return  janelaUser;
 }
+
 
 function creatLoginWindow() {
   janelaLogin = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 800,
+    height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -38,13 +59,34 @@ function creatLoginWindow() {
   janelaLogin.loadFile('./src/login/login.html')
 }
 
-function getJanelaLogin(){
-  return janelaLogin
+//----------------------------
+
+function getJanelaPrincipal() {
+  return janelaPrincipal;
 }
+
+function getJanelaLogin(){
+  return janelaLogin;
+}
+
+function getJanelaUser(){
+  return janelaUser;
+}
+
+//--------------------------
 
 module.exports = {
   getJanelaPrincipal,
+
   getJanelaLogin,
+
+  getJanelaUser,
+
   createMainWindow,
+
   creatLoginWindow,
+
+  createUserWindow,
+
+
 };

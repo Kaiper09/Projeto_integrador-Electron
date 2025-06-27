@@ -14,7 +14,7 @@ const botaoLimpar = document.getElementById('btn-limpar');
 //const botaoExcluir = document.getElementById('btn-excluir');
 const botaoSalvar = document.getElementById('btn-salvar');
 
-botaoSalvar.addEventListener('click', salvarCliente);
+botaoSalvar.addEventListener('click', inserirCliente);
 //botaoExcluir.addEventListener('click', deleterCliente);
 botaoLimpar.addEventListener('click', limpardados );
 
@@ -44,7 +44,7 @@ async function limpardados(){
      mostrarDetalhes(' ',' ',' ',' ', ' ',' ')
 }
 
-async function salvarCliente() {
+async function inserirCliente() {
     const newNome= modalNomeCliente.value;
     const newNascimento= modalNascimentoCliente.value;
     const newNumero= modalNumeroCliente.value;
@@ -53,18 +53,18 @@ async function salvarCliente() {
    
 
     if(modalCpfCliente==''){
-        if(newNome===''|| newNascimento==='' || newNumero==='' || newCidade===''){
+        if(newNome===''|| newNascimento==='' || newNumero==='' || newCidade==='' || newSitucao===''){
             return;
-        }console.log("testano insireiriraitgia");
-        await window.bancoDeDadosAPI.inserirCliente(newNome, newNascimento, newCidade, newNumero);
+        }console.log("testano insirir");
+        await window.bancoDeDadosAPI.inserirCliente(newNome, newNascimento, newCidade, newNumero, newSitucao);
         carregarClientes();
         console.log("Testando");
-        mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
+        //mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
         return;
     }else{
         console.log("alterando");
         await atualizarCliente();
-        mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
+       // mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
     }
 
    
@@ -90,10 +90,10 @@ async function atualizarCliente() {
     const newCpf= modalCpfCliente.value;
 
     console.log("atualização teste");
-                                                    //nome, nascimento, numero, cidade, situacao, cpf
+                                                    
     const retorno = await window.bancoDeDadosAPI.atualizarCliente(newNome, newNascimento, newNumero, newCidade, newSitucao,newCpf);
     carregarClientes();
-
+    mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
 }
 
 

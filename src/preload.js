@@ -23,39 +23,55 @@ function deleterCliente(cpf) {
 
 //---------------------------------------
 
+function abrirUser(){
+    ipcRenderer.send('abrir-user')
+}
+
 function abrirCliente(){
     ipcRenderer.send('abrir-cliente')
 }
-
+ 
 //-------------------------------
 
 function validarLogin(usuario, senha){
     return ipcRenderer.invoke('validar-login', usuario, senha)
 }
 
+function telaUsuario(cpf_cliente){
+    return ipcRenderer.invoke('usuarios', cpf_cliente)
+}
 
 //-------------------------------
 
 contextBridge.exposeInMainWorld('bancoDeDadosAPI',
 
     {
-        buscarCliente: buscarCliente,
-        atualizarCliente: atualizarCliente,
-        inserirCliente: inserirCliente,
-        deleterCliente: deleterCliente,
+        buscarCliente,
+        atualizarCliente,
+        inserirCliente,
+        deleterCliente,
 
         //-------------------------------
         
-        validarLogin: validarLogin,
+        validarLogin,
+        telaUsuario,
+        
+       
 
     })
 
 function abrirMenuPrincipal(){
     ipcRenderer.send('abrir-menu')
+    
+}
+
+function abrirUser(){
+    ipcRenderer.send('abrir-user')
 }
 
 contextBridge.exposeInMainWorld('janelaAPI',
 {
     abrirMenuPrincipal,
-    abrirCliente:abrirCliente,
+    abrirUser,
+    abrirCliente,
 })

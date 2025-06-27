@@ -16,8 +16,9 @@ const { modalAbrirCliente } = require('./janelaModal')
 const {
     validarLogin,
     
-}= require('./login/loginDB')
+}= require('./login/loginDB');
 
+const {telaUsuario}= require('./user/userDB')
 //----------------------------------
 function registrarClienteHandler(){
     ipcMain.handle('buscar-cliente',buscarCliente)
@@ -33,6 +34,12 @@ function registrarClienteHandler(){
     }
 //-----------------------------------
 
+    function registrarUserHandler(){
+        ipcMain.handle('usuarios', telaUsuario)
+    }
+
+//-----------------------------------
+
 
 function registrarJanela(){
     ipcMain.on('abrir-cliente',modalAbrirCliente)
@@ -46,6 +53,7 @@ function registrarJanela(){
 function registrarListeners(){
     registrarClienteHandler();
     registrarLoginHandler();
+    registrarUserHandler()
     registrarJanela();
 }
 

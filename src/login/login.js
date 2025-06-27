@@ -3,19 +3,30 @@ const senha = document.getElementById('senha');
 const btn_acessar = document.getElementById('acessar');
 const msg= document.getElementById('msg')
 
-btn_acessar.addEventListener('click', validarlogin)
+btn_acessar.addEventListener('click', validarLogin)
 
-async function validarlogin(){
 
+async function validarLogin(){
     const retorno= await window.bancoDeDadosAPI.validarLogin(login.value, senha.value)
-    if(retorno){
-        await window.janelaAPI.abrirMenuPrincipal()
-        msg.textContent="Acessado com sucesso"
-        msg.style.color="green"
+    console.log(retorno)
+
+    localStorage.setItem('perfil', retorno.perfil);
+    localStorage.setItem('cpf_cliente', retorno.cpf_cliente)
+
+   const perfil = localStorage.getItem('perfil');
+   const cpfCliente = localStorage.getItem('cpf_cliente');
+
+   console.log(perfil)
+   console.log(cpfCliente)
+
+    if(retorno.perfil==='Adm'){
+        console.log("adm")
+    await window.janelaAPI.abrirMenuPrincipal()
 
     }else{
-    msg.style.color="red";
-    msg.textContent = "Senha ou Email incorreto";
+    await window.janelaAPI.abrirUser()
+    console.log('user')
 }
-    
 }
+
+

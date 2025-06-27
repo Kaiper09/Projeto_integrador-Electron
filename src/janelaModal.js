@@ -32,10 +32,7 @@ function modalAbrirCliente(){
     }else{
         console.warn("Não foi possível abrir a modal: Janela Principal não encontrada")
     }
-
-
 }
-
 
 
 
@@ -43,5 +40,6 @@ function modalAbrirCliente(){
 module.exports = {
     criarJanelaModal,
     createMainWindow,
-    modalAbrirCliente
+    modalAbrirCliente,
+    
 };

@@ -56,8 +56,8 @@ async function inserirCliente() {
         if(newNome===''|| newNascimento==='' || newNumero==='' || newCidade==='' || newSitucao===''){
             return;
         }console.log("testano insirir");
-        await window.bancoDeDadosAPI.inserirCliente(newNome, newNascimento, newCidade, newNumero, newSitucao);
-        carregarClientes();
+        await window.bancoDeDadosAPI.inserirCliente(newNome, newNascimento, newNumero, newCidade, newSitucao);
+        carregarClientes();                         
         console.log("Testando");
         //mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
         return;
@@ -93,7 +93,7 @@ async function atualizarCliente() {
                                                     
     const retorno = await window.bancoDeDadosAPI.atualizarCliente(newNome, newNascimento, newNumero, newCidade, newSitucao,newCpf);
     carregarClientes();
-    mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
+    //mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
 }
 
 

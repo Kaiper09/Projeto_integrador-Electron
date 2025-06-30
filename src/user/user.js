@@ -84,15 +84,6 @@ function criarLinhaUser(servico) {
     );
 
 
-    botao.textContent = '';
-
-    celulaBotao.appendChild(botao);
-
-
-    linha.appendChild(celulaBotao);
-
-
-
     //final adiciono a linha criada com Nascimento,nome e botao à tabela
     tabelaUser.appendChild(linha);
 

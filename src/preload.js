@@ -14,7 +14,7 @@ function atualizarCliente(nome, nascimento, numero, cidade, situacao , cpf) {
 
 function inserirCliente(cpf, nome, nascimento, numero, cidade) {
     return ipcRenderer.invoke('inserir-cliente', cpf, nome, nascimento, numero, cidade,situacao )
-}
+}                                                   
 
 function deleterCliente(cpf) {
     return ipcRenderer.invoke('deletar-cliente', cpf)

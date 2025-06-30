@@ -7,7 +7,7 @@ const resultado = await db.query(`SELECT
   veiculo.placa_veiculo AS placa_veiculo,
   veiculo.nome_veiculo AS nome_veiculo,
   servico.trabalho_feito AS trabalho_feito,
-  servico.data AS data,
+  TO_CHAR (data, 'DD/MM/YYYY') AS data,
   servico.situacao AS situacao,
   servico.valor_servico AS valor
   

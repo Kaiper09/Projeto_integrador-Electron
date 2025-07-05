@@ -8,18 +8,25 @@ function buscarCliente() {
 }
 
 function atualizarCliente(nome, nascimento, numero, cidade, situacao , cpf) {
-    return ipcRenderer.invoke('atualizar-cliente', nome, nascimento, numero, cidade, situacao,cpf)
+    return ipcRenderer.invoke('atualizar-cliente', nome, nascimento, numero, cidade, situacao, cpf)
     //                                       
 }
 
-function inserirCliente(cpf, nome, nascimento, numero, cidade) {
-    return ipcRenderer.invoke('inserir-cliente', cpf, nome, nascimento, numero, cidade,situacao )
+function inserirCliente(cpf, nome, nascimento, numero, cidade, situacao) {
+    return ipcRenderer.invoke('inserir-cliente', cpf, nome, nascimento, numero, cidade, situacao )
 }                                                   
 
 function deleterCliente(cpf) {
     return ipcRenderer.invoke('deletar-cliente', cpf)
 }
 
+function verificarCPF(cpf){
+    return ipcRenderer.invoke('verificar-cpf', cpf)
+}
+
+function notificarCliente(){
+    return ipcRenderer.invoke('notificarCliente')
+}
 
 //---------------------------------------
 
@@ -50,6 +57,8 @@ contextBridge.exposeInMainWorld('bancoDeDadosAPI',
         atualizarCliente,
         inserirCliente,
         deleterCliente,
+        verificarCPF,
+        notificarCliente,
 
         //-------------------------------
         

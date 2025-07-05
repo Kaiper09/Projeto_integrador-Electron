@@ -7,6 +7,8 @@ const {
     atualizarCliente,
     inserirCliente,
     deleterCliente,
+    verificarCPF,
+    clienteNotificar,
 }=require('./cliente/clienteDB')
 
 const { modalAbrirCliente } = require('./janelaModal')
@@ -15,7 +17,6 @@ const { modalAbrirCliente } = require('./janelaModal')
 
 const {
     validarLogin,
-    
 }= require('./login/loginDB');
 
 const {telaUsuario}= require('./user/userDB')
@@ -25,6 +26,9 @@ function registrarClienteHandler(){
     ipcMain.handle('inserir-cliente',inserirCliente)
     ipcMain.handle('atualizar-cliente',atualizarCliente)
     ipcMain.handle('deletar-cliente',deleterCliente)
+    ipcMain.handle('verificar-cpf', verificarCPF)
+    ipcMain.handle('notificarCliente', clienteNotificar)
+
 }
 
 //-----------------------------------
@@ -55,6 +59,7 @@ function registrarListeners(){
     registrarLoginHandler();
     registrarUserHandler()
     registrarJanela();
+    registrarNotificao();   
 }
 
 module.exports={

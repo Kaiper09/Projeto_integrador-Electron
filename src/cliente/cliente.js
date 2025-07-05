@@ -4,11 +4,11 @@ const tabelaCliente = document.getElementById('clientesTableDados');
 const modalCpfCliente = document.getElementById('cliente-cpf');
 const modalNomeCliente = document.getElementById('cliente-nome');
 const modalNascimentoCliente = document.getElementById('cliente-nascimento');
-const modalNumeroCliente= document.getElementById('cliente-numero');
-const modalCidadeCliente= document.getElementById('cliente-cidade');
+const modalNumeroCliente = document.getElementById('cliente-numero');
+const modalCidadeCliente = document.getElementById('cliente-cidade');
+const msg = document.getElementById('msg')
 
-
-const dropDownSituacao= document.getElementById('situacao');
+const dropDownSituacao = document.getElementById('situacao');
 
 const botaoLimpar = document.getElementById('btn-limpar');
 //const botaoExcluir = document.getElementById('btn-excluir');
@@ -16,8 +16,21 @@ const botaoSalvar = document.getElementById('btn-salvar');
 
 botaoSalvar.addEventListener('click', inserirCliente);
 //botaoExcluir.addEventListener('click', deleterCliente);
-botaoLimpar.addEventListener('click', limpardados );
+botaoLimpar.addEventListener('click', limpardados);
 
+function notificar(cliente, dias) {
+  new Notification('Alerta', {
+    body: cliente+"  esteve na mecânica á " +  dias + " dias"
+  });
+}
+;
+
+async function buscarInativo(){
+    const retorno= await window.bancoDeDadosAPI.notificarCliente();
+    notificar(retorno.nome, retorno.diferenca_em_dias)
+    console.log(retorno)
+
+}
 
 
 
@@ -34,41 +47,90 @@ function mostrarDetalhes(cpf, nome, nascimento, numero, cidade,) {
         modalNascimentoCliente.value = '';
     }
     //modalNascimentoCliente.value = nascimento.toISOString().slice(0, 10);
-    modalNumeroCliente.value= numero;
-    modalCidadeCliente.value= cidade;
-   
-    
+    modalNumeroCliente.value = numero;
+    modalCidadeCliente.value = cidade;
+
+
 }
 
-async function limpardados(){
-     mostrarDetalhes(' ',' ',' ',' ', ' ',' ')
+async function limpardados() {
+    mostrarDetalhes(' ', ' ', ' ', ' ', ' ', ' ')
 }
 
 async function inserirCliente() {
-    const newNome= modalNomeCliente.value;
-    const newNascimento= modalNascimentoCliente.value;
-    const newNumero= modalNumeroCliente.value;
-    const newCidade= modalCidadeCliente.value;
-    const newSitucao= dropDownSituacao.value
-   
+    const newNome = modalNomeCliente.value.trim();
+    const newNascimento = modalNascimentoCliente.value.trim();
+    const newNumero = modalNumeroCliente.value.trim();
+    const newCidade = modalCidadeCliente.value.trim();
+    const newSituacao = dropDownSituacao.value.trim();
 
-    if(modalCpfCliente==''){
-        if(newNome===''|| newNascimento==='' || newNumero==='' || newCidade==='' || newSitucao===''){
-            return;
-        }console.log("testano insirir");
-        await window.bancoDeDadosAPI.inserirCliente(newNome, newNascimento, newNumero, newCidade, newSitucao);
-        carregarClientes();                         
-        console.log("Testando");
-        //mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
+    let cpfDigitado = modalCpfCliente.value.trim();
+    let cpf = verificarCPFRegex(cpfDigitado); // ← aqui formata certinho
+
+    if (!newNome || !newNascimento || !newNumero || !newCidade || !newSituacao || !cpf) {
+        msg.textContent = "Preencha todos os campos obrigatórios.";
+        msg.style.color = "red";
         return;
-    }else{
-        console.log("alterando");
-        await atualizarCliente();
-       // mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
     }
 
-   
+    const cpfValido = await verificarcpf();
+    if (!cpfValido) return;
+
+    if (modalCpfCliente.hasAttribute('readonly')) {
+        await atualizarCliente();
+    } else {
+        await window.bancoDeDadosAPI.inserirCliente(cpf, newNome, newNascimento, newNumero, newCidade, newSituacao);
+    }
+
+    limpardados();
+    carregarClientes();
 }
+
+
+
+async function verificarcpf() {
+    let cpfDigitado = modalCpfCliente.value.trim();
+    let cpfFormatado = verificarCPFRegex(cpfDigitado);
+
+    if (!cpfFormatado) {
+        return false; 
+    }
+
+    modalCpfCliente.value = cpfFormatado; 
+
+
+    if (modalCpfCliente.hasAttribute('readonly')) {
+        return true;
+    }
+
+    // Se for novo CPF, verifica se já existe
+    let cpfExiste = await window.bancoDeDadosAPI.verificarCPF(cpfFormatado);
+
+    if (cpfExiste) {
+        msg.textContent = 'CPF já existe';
+        msg.style.color = 'red';
+        return false;
+    }
+
+    msg.textContent = ''
+    return true;
+}
+
+
+
+function verificarCPFRegex(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+
+    if (cpf.length !== 11) {
+        msg.textContent = 'O CPF deve ter 11 dígitos';
+        msg.style.color = 'red';
+        return null;
+    }
+
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
+
+
 
 /*async function deleterCliente() {
     const cpf = modalCpfCliente.value;
@@ -82,18 +144,25 @@ async function inserirCliente() {
 }*/
 
 async function atualizarCliente() {
-    const newNome= modalNomeCliente.value;
-    const newNascimento= modalNascimentoCliente.value;
-    const newNumero= modalNumeroCliente.value;
-    const newCidade= modalCidadeCliente.value;
-    const newSitucao= dropDownSituacao.value
-    const newCpf= modalCpfCliente.value;
-
-    console.log("atualização teste");
-                                                    
-    const retorno = await window.bancoDeDadosAPI.atualizarCliente(newNome, newNascimento, newNumero, newCidade, newSitucao,newCpf);
-    carregarClientes();
-    //mostrarDetalhes(' ',' ',' ',' ', ' ', ' ');
+    const newNome = modalNomeCliente.value;
+    const newNascimento = modalNascimentoCliente.value;
+    const newNumero = modalNumeroCliente.value;
+    const newCidade = modalCidadeCliente.value;
+    const newSituacao = dropDownSituacao.value
+    const newCpf = modalCpfCliente.value;
+    
+    console.log("testantado atualizar")
+  if (newCpf && newCpf.trim() === "") {
+        console.log("Atualizando cliente...");
+        const retorno = await window.bancoDeDadosAPI.atualizarCliente(
+            newNome, newNascimento, newNumero, newCidade, newSituacao, newCpf
+        );
+        carregarClientes();
+        mostrarDetalhes(' ', ' ', ' ', ' ', ' ', ' ');
+    }else {
+    
+    await window.bancoDeDadosAPI.inserirCliente()    
+}
 }
 
 
@@ -119,7 +188,7 @@ function criarLinhaCliente(clientes) {
     //linha 
     const linha = document.createElement("tr");
 
-    const celulaCpf= document.createElement("td");
+    const celulaCpf = document.createElement("td");
     celulaCpf.textContent = clientes.cpf;
     linha.appendChild(celulaCpf);
 
@@ -133,16 +202,16 @@ function criarLinhaCliente(clientes) {
     celulaNascimento.textContent = clientes.nascimento.toLocaleDateString();
     linha.appendChild(celulaNascimento);
 
-    const celulaNumero=  document.createElement("td");
-    celulaNumero.textContent= clientes.numero;
+    const celulaNumero = document.createElement("td");
+    celulaNumero.textContent = clientes.numero;
     linha.appendChild(celulaNumero);
 
-    const celulaCidade= document.createElement("td");
-    celulaCidade.textContent= clientes.cidade;
+    const celulaCidade = document.createElement("td");
+    celulaCidade.textContent = clientes.cidade;
     linha.appendChild(celulaCidade);
 
-    const celulaSituacao= document.createElement("td");
-    celulaSituacao.textContent= clientes.situacao;
+    const celulaSituacao = document.createElement("td");
+    celulaSituacao.textContent = clientes.situacao;
     linha.appendChild(celulaSituacao);
 
     //botao de modificar
@@ -160,14 +229,14 @@ function criarLinhaCliente(clientes) {
 
 
     const icone = document.createElement("i")
-    icone.setAttribute("data-lucide","edit");
+    icone.setAttribute("data-lucide", "edit");
     botao.appendChild(icone);
 
     const iconeLimpar = document.getElementById('ilimpar');
-    iconeLimpar.setAttribute('data-lucide','circle-plus');
+    iconeLimpar.setAttribute('data-lucide', 'circle-plus');
 
     const iconeSalvar = document.getElementById('isalvar');
-    iconeSalvar.setAttribute('data-lucide','save');
+    iconeSalvar.setAttribute('data-lucide', 'save');
 
     /*const iconelixo = document.getElementById('ilixo');
     iconelixo.setAttribute('data-lucide', 'trash-2');*/
@@ -187,7 +256,7 @@ async function carregarTabela() {
     opcao.forEach(situacao => {
         const option = document.createElement("option");
         option.value = situacao;
-        option.textContent = situacao; 
+        option.textContent = situacao;
         dropDownSituacao.appendChild(option);
     });
 }
@@ -195,3 +264,4 @@ async function carregarTabela() {
 
 carregarTabela();
 carregarClientes();
+buscarInativo();

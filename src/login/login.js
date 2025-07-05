@@ -7,7 +7,7 @@ btn_acessar.addEventListener('click', validarLogin)
 
 
 async function validarLogin(){
-    const retorno= await window.bancoDeDadosAPI.validarLogin(login.value, senha.value)
+    const retorno= await window.bancoDeDadosAPI.validarLogin(login.value.toLowerCase(), senha.value)
     console.log(retorno)
 
     localStorage.setItem('perfil', retorno.perfil);
@@ -19,7 +19,7 @@ async function validarLogin(){
    console.log(perfil)
    console.log(cpfCliente)
 
-    if(retorno.perfil==='Adm'){
+    if(retorno.perfil==='adm'){
         console.log("adm")
     await window.janelaAPI.abrirMenuPrincipal()
 

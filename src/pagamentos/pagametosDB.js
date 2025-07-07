@@ -1,12 +1,15 @@
 const db= require('../db')
 
-async function buscarServico(){
+async function buscarPagamentos(){
     const resultado= await db.query(`
-        SELECT servicos.* 
-FROM servicos.servicos
+        SELECT pagamentos.* 
+FROM servicos.pagamentos
+
+JOIN servicos.servicos
+ON pagamentos.id_servico= servicos.id_servico
 
 JOIN servicos.veiculos
-on servicos.placa_veiculo_id= veiculos.placa_veiculo
+ON servicos.placa_veiculo_id= veiculos.placa_veiculo
 
 JOIN servicos.clientes
 ON veiculos.cpf_dono = clientes.cpf
@@ -16,5 +19,5 @@ return resultado.rows
 }
 
 module.exports={
-   buscarServico, 
+    buscarPagamentos,
 }

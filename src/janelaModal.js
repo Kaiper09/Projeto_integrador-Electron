@@ -34,6 +34,15 @@ function modalAbrirCliente(){
     }
 }
 
+function modalAbrirVeiculo(){
+    let mainWindow = getJanelaPrincipal();
+    if(mainWindow){
+        criarJanelaModal(mainWindow, './src/veiculo/veiculo.html')
+    }else{
+        console.warn("Não foi possível abrir a modal: Janela Principal não encontrada")
+    }
+}
+
 
 
 
@@ -41,5 +50,6 @@ module.exports = {
     criarJanelaModal,
     createMainWindow,
     modalAbrirCliente,
+    modalAbrirVeiculo,
     
 };

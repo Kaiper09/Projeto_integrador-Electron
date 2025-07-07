@@ -16,11 +16,14 @@ function createMainWindow() {
 
   janelaPrincipal.loadFile("./src/index.html");
 
-  janelaPrincipal.on("closed", () => {
-    janelaPrincipal = null; //limpa a referencia quando a jenela é fechada
+ janelaPrincipal.on("closed", () => {
+    janelaPrincipal = null; // limpa a referência
   });
 
-janelaLogin.close()
+  // Fecha a janela de login se estiver aberta
+  if (janelaLogin) {
+    janelaLogin.close();
+  }
 
   return janelaPrincipal;
 }
@@ -37,13 +40,16 @@ function createUserWindow() {
 
    janelaUser.loadFile("./src/user/user.html");
 
-   janelaUser.on("closed", () => {
-     janelaUser = null; //limpa a referencia quando a jenela é fechada
+  anelaUser.on("closed", () => {
+    janelaUser = null; // limpa a referência
   });
 
- janelaLogin.close()
+  // Fecha a janela de login se estiver aberta
+  if (janelaLogin) {
+    janelaLogin.close();
+  }
 
-  return  janelaUser;
+  return janelaUser;
 }
 
 

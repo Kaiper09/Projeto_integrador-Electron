@@ -19,14 +19,14 @@ botaoSalvar.addEventListener('click', inserirCliente);
 botaoLimpar.addEventListener('click', limpardados);
 
 function notificar(cliente, dias) {
-  new Notification('Alerta', {
-    body: cliente+"  esteve na mecânica á " +  dias + " dias"
-  });
+    new Notification('Alerta', {
+        body: cliente + "  esteve na mecânica á " + dias + " dias"
+    });
 }
 ;
 
-async function buscarInativo(){
-    const retorno= await window.bancoDeDadosAPI.notificarCliente();
+async function buscarInativo() {
+    const retorno = await window.bancoDeDadosAPI.notificarCliente();
     notificar(retorno.nome, retorno.diferenca_em_dias)
     console.log(retorno)
 
@@ -65,57 +65,44 @@ async function inserirCliente() {
     const newSituacao = dropDownSituacao.value.trim();
 
     let cpfDigitado = modalCpfCliente.value.trim();
-    let cpf = verificarCPFRegex(cpfDigitado); // ← aqui formata certinho
+    let cpf = verificarCPFRegex(cpfDigitado); // ← formata corretamente
 
-    if (!newNome || !newNascimento || !newNumero || !newCidade || !newSituacao || !cpf) {
-        msg.textContent = "Preencha todos os campos obrigatórios.";
-        msg.style.color = "red";
-        return;
-    }
+    // Atualiza o campo com o CPF formatado
+    modalCpfCliente.value = cpf;
 
-    const cpfValido = await verificarcpf();
+    // Verifica se o CPF existe e trata a inserção/atualização
+    const cpfValido = await verificarcpf(cpf, newNome, newNascimento, newNumero, newCidade, newSituacao);
+
+    // Se já foi tratado dentro da verificarcpf, não continua aqui
     if (!cpfValido) return;
-
-    if (modalCpfCliente.hasAttribute('readonly')) {
-        await atualizarCliente();
-    } else {
-        await window.bancoDeDadosAPI.inserirCliente(cpf, newNome, newNascimento, newNumero, newCidade, newSituacao);
-    }
-
+        await window.bancoDeDadosAPI.inserirCliente(cpf, newNome, newNascimento, newNumero, newCidade,newSituacao);
+        msg.textContent = "Cliente inserido com sucesso.";
+        msg.style.color = "green";
     limpardados();
     carregarClientes();
 }
 
 
-
-async function verificarcpf() {
-    let cpfDigitado = modalCpfCliente.value.trim();
-    let cpfFormatado = verificarCPFRegex(cpfDigitado);
-
-    if (!cpfFormatado) {
-        return false; 
-    }
-
-    modalCpfCliente.value = cpfFormatado; 
-
-
+async function verificarcpf(cpf, nome, nascimento, numero, cidade, situacao) {
+    // Já está em modo edição? Então não precisa verificar
     if (modalCpfCliente.hasAttribute('readonly')) {
         return true;
     }
 
-    // Se for novo CPF, verifica se já existe
-    let cpfExiste = await window.bancoDeDadosAPI.verificarCPF(cpfFormatado);
+    // Verificase o CPF já existe
+    let cpfExiste = await window.bancoDeDadosAPI.verificarCPF(cpf);
 
     if (cpfExiste) {
-        msg.textContent = 'CPF já existe';
-        msg.style.color = 'red';
-        return false;
+        await window.bancoDeDadosAPI.atualizarCliente(nome, nascimento, numero, cidade, situacao, cpf);
+        msg.textContent = "Cliente atualizado com sucesso.";
+        msg.style.color = "green";
+        limpardados();
+        carregarClientes();
+        return false; // Não continue com a inserção
     }
 
-    msg.textContent = ''
-    return true;
+    return true; // CPF ainda não existe, pode inserir
 }
-
 
 
 function verificarCPFRegex(cpf) {
@@ -150,21 +137,20 @@ async function atualizarCliente() {
     const newCidade = modalCidadeCliente.value;
     const newSituacao = dropDownSituacao.value
     const newCpf = modalCpfCliente.value;
-    
+
     console.log("testantado atualizar")
-  if (newCpf && newCpf.trim() === "") {
+    if (newCpf && newCpf === "") {
         console.log("Atualizando cliente...");
         const retorno = await window.bancoDeDadosAPI.atualizarCliente(
             newNome, newNascimento, newNumero, newCidade, newSituacao, newCpf
         );
         carregarClientes();
         mostrarDetalhes(' ', ' ', ' ', ' ', ' ', ' ');
-    }else {
-    
-    await window.bancoDeDadosAPI.inserirCliente()    
-}
-}
+    } else {
 
+        await window.bancoDeDadosAPI.inserirCliente()
+    }
+}
 
 async function carregarClientes() {
     const listaClientes = await window.bancoDeDadosAPI.buscarCliente();
@@ -218,7 +204,13 @@ function criarLinhaCliente(clientes) {
     const celulaBotao = document.createElement("td");
     const botao = document.createElement("button");
     botao.addEventListener("click",
-        function () { mostrarDetalhes(clientes.cpf, clientes.nome, clientes.nascimento, clientes.numero, clientes.cidade, clientes.situacao) }
+        function () { mostrarDetalhes(
+            clientes.cpf, 
+            clientes.nome, 
+            clientes.nascimento, 
+            clientes.numero, 
+            clientes.cidade, 
+            clientes.situacao) }
     );
     botao.textContent = '';
 

@@ -1,32 +1,46 @@
 const login = document.getElementById('login');
 const senha = document.getElementById('senha');
 const btn_acessar = document.getElementById('acessar');
-const msg= document.getElementById('msg')
+const msg = document.getElementById('msg');
 
-btn_acessar.addEventListener('click', validarLogin)
+btn_acessar.addEventListener('click', validarLogin);
 
+async function validarLogin() {
+    const usuario = login.value.trim().toLowerCase();
+    const senhaDigitada = senha.value.trim();
 
-async function validarLogin(){
-    const retorno= await window.bancoDeDadosAPI.validarLogin(login.value.toLowerCase(), senha.value)
-    console.log(retorno)
+    if (!usuario || !senhaDigitada) {
+        msg.textContent = "Preencha login e senha.";
+        msg.style.color = "red";
+        return;
+    }
 
-    localStorage.setItem('perfil', retorno.perfil);
-    localStorage.setItem('cpf_cliente', retorno.cpf_cliente)
+    try {
+        const retorno = await window.bancoDeDadosAPI.validarLogin(usuario, senhaDigitada);
+        console.log(retorno);
 
-   const perfil = localStorage.getItem('perfil');
-   const cpfCliente = localStorage.getItem('cpf_cliente');
+        // mensagem para usuário não encontrado
+        if (!retorno || !retorno.perfil) {
+            msg.textContent = "Usuário ou senha inválidos.";
+            msg.style.color = "red";
+            return;
+        }
 
-   console.log(perfil)
-   console.log(cpfCliente)
+       
+        localStorage.setItem('perfil', retorno.perfil);
+        localStorage.setItem('cpf_cliente', retorno.cpf_cliente);
 
-    if(retorno.perfil==='adm'){
-        console.log("adm")
-    await window.janelaAPI.abrirMenuPrincipal()
+        msg.textContent = ""; 
 
-    }else{
-    await window.janelaAPI.abrirUser()
-    console.log('user')
+        if (retorno.perfil === 'adm') {
+            await window.janelaAPI.abrirMenuPrincipal();
+        } else {
+            await window.janelaAPI.abrirUser();
+        }
+
+    } catch (err) {
+        console.error("Erro ao validar login:", err);
+        msg.textContent = "Erro ao validar login. Tente novamente.";
+        msg.style.color = "red";
+    }
 }
-}
-
-

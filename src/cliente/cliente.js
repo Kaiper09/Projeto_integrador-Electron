@@ -257,3 +257,4 @@ async function carregarTabela() {
 carregarTabela();
 carregarClientes();
 buscarInativo();
+

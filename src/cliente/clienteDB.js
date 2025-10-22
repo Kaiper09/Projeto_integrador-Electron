@@ -68,11 +68,14 @@ return resultado.rows[0]
 }
 
 
+
+
 module.exports={
     clienteNotificar,
     buscarCliente,
     inserirCliente,
     atualizarCliente,
     deleterCliente,
-    verificarCPF
+    verificarCPF,
+
 }

@@ -1,4 +1,7 @@
-const tabelaUser = document.getElementById('userTableDados')
+
+
+const tabelaUser = document.getElementById('userTableDados');
+
 
 const userCpf= document.getElementById('user-cpf');
 const userPlaca= document.getElementById('user-placa');
@@ -6,8 +9,9 @@ const userVeiculo= document.getElementById('user-veiculo');
 const userServico= document.getElementById('user-servico');
 const userData= document.getElementById('user-data');
 const userSituacao= document.getElementById('user-situacao');
-const userValor= document.getElementById('user-valor')
+const userValor= document.getElementById('user-valor');
 
+//formatarDataParaTexto();
 
 // Função para formatar para o input (yyyy-mm-dd)
 function formatarDataParaInput(data) {

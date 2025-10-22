@@ -40,7 +40,7 @@ function createUserWindow() {
 
    janelaUser.loadFile("./src/user/user.html");
 
-  anelaUser.on("closed", () => {
+  janelaUser.on("closed", () => {
     janelaUser = null; // limpa a referência
   });
 

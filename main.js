@@ -1,6 +1,9 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Notification } = require('electron');
 const path = require('path');
+const {creatLoginWindow} = require('./src/janelaPrincipal');
+
 const {createMainWindow} = require('./src/janelaPrincipal');
+
 const{registrarListeners} = require('./src/APPListeners');
 
 if (process.env.NODE_ENV !== 'production') {
@@ -8,14 +11,26 @@ if (process.env.NODE_ENV !== 'production') {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
     });
-  } catch (err) {
-    console.error('electron-reload não foi carregado:', err);
+  } catch (error) {
+    console.error('electron-reload não foi carregado:', error);
   }
 }
 
-app.whenReady().then(function () {
+ 
+      
 
-  createMainWindow();
+function teste(titulo, mensagem){
+    new Notification({
+        title: "Alerta de atraso de serviço!",
+        body: "Tal carro foi deixado na mecênica á 3 dias atrás e nem um serviço realizado!",
+      }).show();
+}
+ 
+app.whenReady().then(function () {
+ 
+  //createMainWindow();
+  creatLoginWindow();
+  //setInterval(teste, 3000) 
   registrarListeners();
 
   app.on('activate', function () {
